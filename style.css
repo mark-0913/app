@@ -1,0 +1,14 @@
+body {
+  font-family: sans-serif;
+  background-color: #f5f5f5;
+  text-align: center;
+}
+
+.work {
+  margin: 30px;
+}
+
+img {
+  width: 300px;
+  border-radius: 10px;
+}
