@@ -70,5 +70,56 @@
 
 </main>
 
+<h2 style="text-align:center;">その他の作品</h2>
+
+<!-- サムネ一覧 -->
+<div class="gallery">
+
+  <img src="images/本棚.png" onclick="showWork('workA')">
+  <img src="images/ロッカー2.png" onclick="showWork('workB')">
+  <img src="images/snowglobe.png" onclick="showWork('workC')">
+
+</div>
+
+<!-- 詳細表示エリア -->
+<div id="detail">
+
+  <!-- A -->
+  <div class="detail-item" id="workA">
+    <h2>作品4 : 本棚</h2>
+    <video controls loop muted>
+      <source src="videos/本棚.mp4" type="video/mp4">
+    </video>
+    <p>以前作った本を使い制作。
+	アニメーションにも挑戦したが自然な動きを作るのは難しく、どこかぎこちない動きになってしまった。
+	手振れなどの細かな揺れや自然な回転が今後の課題。</p>
+  </div>
+
+  <!-- B -->
+  <div class="detail-item" id="workB">
+    <h2>ロッカー</h2>
+    <img src="images/ロッカー2.png">
+    <p>金属の質感を重視。</p>
+  </div>
+
+  <!-- C -->
+  <div class="detail-item" id="workC">
+    <h2>スノードーム</h2>
+    <video controls loop muted>
+      <source src="videos/snowglobe.mp4" type="video/mp4">
+    </video>
+    <p>雪の表現を工夫。</p>
+  </div>
+
+</div>
 </body>
 </html>
+
+<script>
+function showWork(id) {
+  const items = document.querySelectorAll(".detail-item");
+  items.forEach(el => el.style.display = "none");
+
+  document.getElementById(id).style.display = "block";
+}
+</script>
