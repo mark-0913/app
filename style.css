@@ -1,84 +1,209 @@
+:root {
+  color-scheme: light;
+  --text: #111111;
+  --muted: #646464;
+  --line: #dedede;
+  --paper: #ffffff;
+  --accent: #256d85;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background: #f5f5f5;
-  font-family: sans-serif;
   margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--paper);
+  color: var(--text);
 }
 
-/* 全体を中央に＆幅制限 */
-main {
-  max-width: 1000px;   
-  margin: 0 auto;
-}
-
-/* タイトル */
-h1 {
-  text-align: center;
-  padding: 30px 0;
-}
-
-/* 作品 */
-.work {
+.hero {
+  min-height: 58vh;
   display: flex;
-  gap: 30px;
-  margin: 50px 0;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 96px clamp(24px, 6vw, 72px) 72px;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(44px, 8vw, 92px);
+  font-weight: 650;
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.hero p {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 20px;
+}
+
+.portfolio {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  padding: 0 clamp(20px, 5vw, 56px) 96px;
+}
+
+.featured-work {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.65fr);
   align-items: center;
+  gap: clamp(28px, 5vw, 64px);
+  min-height: 88vh;
+  padding: 10vh 0 12vh;
 }
 
-/* メディア */
-.media {
-  width: 55%;
-}
-
-.media img,
-.media video {
+.featured-media {
   width: 100%;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+  max-width: 720px;
+  margin: 0 auto;
+  transform: scale(var(--zoom-scale, 0.78));
+  transform-origin: center center;
+  transition: transform 220ms ease, opacity 180ms ease;
 }
 
-/* テキスト */
-.text {
-  width: 45%;
+.featured-media img,
+.featured-media video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: #eeeeee;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.16);
+}
+
+.featured-media video {
+  cursor: pointer;
+}
+
+.featured-copy {
+  max-width: 360px;
+}
+
+.work-count {
+  margin: 0 0 18px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.featured-copy h2 {
+  margin: 0;
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 620;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.featured-copy p:last-child {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 17px;
   line-height: 1.7;
 }
 
-p {
-  white-space: pre-line;
+.thumbnail-section {
+  border-top: 1px solid var(--line);
+  padding-top: 28px;
 }
 
-/* サムネ一覧 */
-.gallery {
+.thumbnail-grid {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 10px;
-  max-width: 800px;
-  margin: 40px auto;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
 }
 
-/* サムネ枠 */
-.gallery img {
-  width: 100%;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 8px;
+.thumbnail {
+  appearance: none;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
   cursor: pointer;
-  transition: 0.2s;
 }
 
-.gallery img:hover {
-  transform: scale(1.05);
-}
-/* 詳細 */
-#detail {
-  max-width: 800px;
-  margin: 40px auto;
+.thumbnail-visual {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 4 / 3;
+  background: #eeeeee;
 }
 
-.detail-item {
-  display: none;
+.thumbnail-visual::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  transition: background 180ms ease;
 }
 
-.detail-item img,
-.detail-item video {
+.thumbnail img {
+  display: block;
   width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 220ms ease, filter 180ms ease;
+}
+
+.thumbnail:hover img,
+.thumbnail:focus-visible img {
+  transform: scale(1.1);
+}
+
+.thumbnail.is-active .thumbnail-visual::after {
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.thumbnail.is-active img {
+  filter: saturate(0.8);
+}
+
+.thumbnail-title {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 650;
+}
+
+.thumbnail-meta {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+@media (max-width: 800px) {
+  .featured-work {
+    grid-template-columns: 1fr;
+    min-height: 82vh;
+    padding-top: 6vh;
+  }
+
+  .featured-copy {
+    max-width: none;
+  }
+
+  .thumbnail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .hero {
+    min-height: 48vh;
+  }
+
+  .portfolio {
+    padding-bottom: 64px;
+  }
+
+  .thumbnail-grid {
+    gap: 14px;
+  }
 }
