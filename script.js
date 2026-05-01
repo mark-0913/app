@@ -4,24 +4,36 @@ const works = [
     description: "シェーディングの練習として、合成皮革カバーの質感とページ側面の重なりを意識しました。",
     image: "images/book1984_2.png",
     video: "videos/book1984.mp4",
+    ratio: "16 / 9",
   },
   {
     title: "ロッカー",
     description: "金属の質感を重視した作品です。",
     image: "images/rokka.png",
+    ratio: "1 / 1",
   },
   {
     title: "スノードーム",
     description: "雪の表現とガラス越しの見え方を工夫しました。",
     image: "images/snowglobe.png",
     video: "videos/snowglobe.mp4",
+    ratio: "1 / 1",
   },
   {
     title: "本棚",
     description: "以前作った本を使って制作しました。アニメーションにも挑戦し、自然な回転や細かな揺れが今後の課題です。",
     image: "images/hondana.png",
     video: "videos/hondana.mp4",
+    ratio: "16 / 9",
   },
+  {
+    title: "遮断機",
+    description: " ",
+    image: "images/syadanki.png",
+    video: "videos/syadanki.mp4",
+    ratio: "16 / 9",
+  },
+
 ];
 
 const featuredMedia = document.querySelector("#featuredMedia");
@@ -54,6 +66,7 @@ function mediaElement(work) {
 
 function renderFeatured(index) {
   const work = works[index];
+  featuredMedia.style.setProperty("--featured-ratio", work.ratio);
   featuredMedia.replaceChildren(mediaElement(work));
   featuredTitle.textContent = work.title;
   featuredDescription.textContent = work.description;
@@ -96,8 +109,12 @@ function renderThumbnails() {
     meta.className = "thumbnail-meta";
     meta.textContent = work.video ? "画像 + 動画" : "画像";
 
+    const text = document.createElement("span");
+    text.className = "thumbnail-text";
+    text.append(title, meta);
+
     visual.append(image);
-    button.append(visual, title, meta);
+    button.append(visual, text);
     fragment.append(button);
   });
 
