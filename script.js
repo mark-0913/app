@@ -4,34 +4,38 @@ const works = [
     description: "シェーディングの練習として、合成皮革カバーの質感とページ側面の重なりを意識しました。",
     image: "images/book1984_2.png",
     video: "videos/book1984.mp4",
-    ratio: "16 / 9",
+    imageRatio: "16 / 9",
+    videoRatio: "16 / 9",
   },
   {
     title: "ロッカー",
     description: "金属の質感を重視した作品です。",
     image: "images/rokka.png",
-    ratio: "1 / 1",
+    imageRatio: "1 / 1",
   },
   {
     title: "スノードーム",
     description: "雪の表現とガラス越しの見え方を工夫しました。",
     image: "images/snowglobe.png",
     video: "videos/snowglobe.mp4",
-    ratio: "1 / 1",
+    imageRatio: "1 / 1",
+    videoRatio: "1 / 1",
   },
   {
     title: "本棚",
     description: "以前作った本を使って制作しました。アニメーションにも挑戦し、自然な回転や細かな揺れが今後の課題です。",
     image: "images/hondana.png",
     video: "videos/hondana.mp4",
-    ratio: "16 / 9",
+    imageRatio: "16 / 9",
+    videoRatio: "16 / 9",
   },
   {
     title: "遮断機",
     description: " ",
     image: "images/syadanki.png",
-    video: "videos/syadanki.mp4",
-    ratio: "16 / 9",
+    videos: ["videos/syadanki-omote.mp4", "videos/syadanki-ura.mp4"],
+    imageRatio: "16 / 9",
+    videoRatio: "1 / 1",
   },
 
 ];
@@ -45,9 +49,112 @@ const thumbnailGrid = document.querySelector("#thumbnailGrid");
 let activeIndex = 0;
 
 function mediaElement(work) {
-  if (work.video) {
+  const videos = work.videos || (work.video ? [work.video] : []);
+
+  if (videos.length > 1) {
+    const carousel = document.createElement("div");
+    carousel.className = "featured-carousel";
+
+    const scroller = document.createElement("div");
+    scroller.className = "featured-media-scroll";
+    scroller.setAttribute("aria-label", `${work.title} videos`);
+
+    const indicators = document.createElement("div");
+    indicators.className = "carousel-indicators";
+    indicators.setAttribute("aria-label", "動画の位置");
+
+    let scrollTimer;
+
+    function scrollToVideo(index) {
+      const nextVideo = scroller.querySelectorAll("video")[index];
+      if (!nextVideo) return;
+
+      scroller.scrollTo({
+        left: nextVideo.offsetLeft,
+        behavior: "smooth",
+      });
+      updateIndicators(index);
+    }
+
+    function visibleVideoIndex() {
+      const videoElements = [...scroller.querySelectorAll("video")];
+      const scrollerCenter = scroller.scrollLeft + scroller.clientWidth / 2;
+      return videoElements.reduce((closest, video, index) => {
+        const videoCenter = video.offsetLeft + video.clientWidth / 2;
+        const distance = Math.abs(scrollerCenter - videoCenter);
+        return distance < closest.distance ? { index, distance } : closest;
+      }, { index: 0, distance: Infinity }).index;
+    }
+
+    function playVisibleVideo() {
+      const videoElements = [...scroller.querySelectorAll("video")];
+      const activeIndex = visibleVideoIndex();
+      videoElements.forEach((video) => {
+        if (video === videoElements[activeIndex]) {
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+      updateIndicators(activeIndex);
+    }
+
+    videos.forEach((src, index) => {
+      const video = document.createElement("video");
+      video.src = src;
+      video.poster = work.image;
+      video.controls = true;
+      video.muted = true;
+      video.playsInline = true;
+      video.autoplay = index === 0;
+      video.setAttribute("aria-label", `${work.title} video ${index + 1}`);
+      video.addEventListener("ended", () => {
+        const nextIndex = (index + 1) % videos.length;
+        const nextVideo = scroller.querySelectorAll("video")[nextIndex];
+        nextVideo.currentTime = 0;
+        scrollToVideo(nextIndex);
+        nextVideo.play().catch(() => {});
+      });
+      scroller.append(video);
+
+      const indicator = document.createElement("button");
+      indicator.className = "carousel-indicator";
+      indicator.type = "button";
+      indicator.setAttribute("aria-label", `動画 ${index + 1} を表示`);
+      indicator.addEventListener("click", () => scrollToVideo(index));
+      indicators.append(indicator);
+    });
+
+    function updateIndicators(activeIndicatorIndex) {
+      indicators.querySelectorAll(".carousel-indicator").forEach((indicator, index) => {
+        indicator.classList.toggle("is-active", index === activeIndicatorIndex);
+        indicator.setAttribute("aria-current", index === activeIndicatorIndex ? "true" : "false");
+      });
+    }
+
+    scroller.addEventListener("scroll", () => {
+      clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(playVisibleVideo, 140);
+    }, { passive: true });
+
+    const previousButton = carouselButton("前の動画", "prev", () => {
+      const currentIndex = currentVideoIndex(scroller);
+      scrollToVideo((currentIndex - 1 + videos.length) % videos.length);
+    });
+
+    const nextButton = carouselButton("次の動画", "next", () => {
+      const currentIndex = currentVideoIndex(scroller);
+      scrollToVideo((currentIndex + 1) % videos.length);
+    });
+
+    updateIndicators(0);
+    carousel.append(scroller, previousButton, nextButton, indicators);
+    return carousel;
+  }
+
+  if (videos.length === 1) {
     const video = document.createElement("video");
-    video.src = work.video;
+    video.src = videos[0];
     video.poster = work.image;
     video.controls = true;
     video.loop = true;
@@ -64,9 +171,30 @@ function mediaElement(work) {
   return image;
 }
 
+function carouselButton(label, direction, onClick) {
+  const button = document.createElement("button");
+  button.className = `carousel-arrow carousel-arrow-${direction}`;
+  button.type = "button";
+  button.setAttribute("aria-label", label);
+  button.textContent = direction === "prev" ? "<" : ">";
+  button.addEventListener("click", onClick);
+  return button;
+}
+
+function currentVideoIndex(scroller) {
+  const videos = [...scroller.querySelectorAll("video")];
+  const scrollerCenter = scroller.scrollLeft + scroller.clientWidth / 2;
+  return videos.reduce((closest, video, index) => {
+    const videoCenter = video.offsetLeft + video.clientWidth / 2;
+    const distance = Math.abs(scrollerCenter - videoCenter);
+    return distance < closest.distance ? { index, distance } : closest;
+  }, { index: 0, distance: Infinity }).index;
+}
+
 function renderFeatured(index) {
   const work = works[index];
-  featuredMedia.style.setProperty("--featured-ratio", work.ratio);
+  const videos = work.videos || (work.video ? [work.video] : []);
+  featuredMedia.style.setProperty("--featured-ratio", videos.length ? work.videoRatio || work.imageRatio : work.imageRatio);
   featuredMedia.replaceChildren(mediaElement(work));
   featuredTitle.textContent = work.title;
   featuredDescription.textContent = work.description;
@@ -107,7 +235,8 @@ function renderThumbnails() {
 
     const meta = document.createElement("span");
     meta.className = "thumbnail-meta";
-    meta.textContent = work.video ? "画像 + 動画" : "画像";
+    const videoCount = work.videos?.length || (work.video ? 1 : 0);
+    meta.textContent = videoCount > 1 ? `画像 + 動画 ${videoCount}本` : videoCount === 1 ? "画像 + 動画" : "画像";
 
     const text = document.createElement("span");
     text.className = "thumbnail-text";
