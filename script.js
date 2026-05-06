@@ -23,7 +23,7 @@ const works = [
   },
   {
     title: "本棚",
-    description: "以前作った本を使って制作しました。アニメーションにも挑戦し、自然な回転や細かな揺れが今後の課題です。",
+    description: "以前作った本を使って制作しました。アニメーションにも挑戦し、自然な回転や細かな揺れが今後の課題。",
     image: "images/hondana.png",
     video: "videos/hondana.mp4",
     imageRatio: "16 / 9",
@@ -37,9 +37,42 @@ const works = [
     imageRatio: "16 / 9",
     videoRatio: "1 / 1",
   },
+  {
+    title: "シャンデリア",
+    description: "エミッションを使用して照明を作成。",
+    image: "images/syoumei.png",
+    videos: ["videos/syoumei1.mp4", "videos/syoumei.mp4"],
+    imageRatio: "1 / 1",
+    videoRatio: "1 / 1",
+  }, 
+  {
+    title: "ポスト",
+    description: "シェーダーの練習",
+    image: "images/post.png",
+    video: "videos/post.mp4",
+    imageRatio: "1 / 1",
+    videoRatio: "1 / 1",
+  },
+  {
+    title: "知恵の輪",
+    description: "金属の粉吹きや錆の質感を意識して制作",
+    image: "images/tienowa.png",
+    video: "videos/tienowa.mp4",
+    imageRatio: "16 / 9",
+    videoRatio: "16 / 9",
+  },
 
 ];
-
+/* 
+ {
+    title: "",
+    description: "",
+    image: "images/.png",
+    videos: ["videos/.mp4", "videos/.mp4"],
+    imageRatio: "1 / 1",
+    videoRatio: "1 / 1",
+  },
+*/
 const featuredMedia = document.querySelector("#featuredMedia");
 const featuredTitle = document.querySelector("#featuredTitle");
 const featuredDescription = document.querySelector("#featuredDescription");
