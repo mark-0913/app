@@ -49,7 +49,7 @@ const works = [
     title: "ポスト",
     description: "シェーダーの練習",
     image: "images/post.png",
-    video: "videos/post.mp4",
+    videos: ["videos/post.mp4","videos/post1.mp4"],
     imageRatio: "1 / 1",
     videoRatio: "1 / 1",
   },
@@ -60,6 +60,14 @@ const works = [
     video: "videos/tienowa.mp4",
     imageRatio: "16 / 9",
     videoRatio: "16 / 9",
+  },
+  {
+    title: "目薬",
+    description: "透明なプラスチックと液体のシェーディング練習",
+    image: "images/megusuri.png",
+    video: "videos/megusuri.mp4",
+    imageRatio: "1 / 1",
+    videoRatio: "1 / 1",
   },
 
 ];

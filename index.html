@@ -5,11 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Blenderポートフォリオ</title>
   <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.164.1/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/"
+      }
+    }
+  </script>
 </head>
 <body>
   <header class="hero">
-    <h1>Blender Portfolio</h1>
-    <p>3DCG Works</p>
+    <div class="hero-content">
+      <div class="hero-copy">
+        <h1>Blender Portfolio</h1>
+        <p>3DCG Works</p>
+      </div>
+
+      <div class="suzanne-stage" aria-hidden="true">
+        <canvas class="suzanne-canvas" id="suzanneCanvas"></canvas>
+      </div>
+    </div>
   </header>
 
   <main class="portfolio" aria-live="polite">
@@ -28,5 +44,6 @@
   </main>
 
   <script src="script.js"></script>
+  <script type="module" src="monkey-model.js"></script>
 </body>
 </html>

@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
   --text: #111111;
-  --muted: #646464;
+  --muted: #5c5c5c;
   --line: #dedede;
   --paper: #ffffff;
   --accent: #256d85;
@@ -19,11 +19,33 @@ body {
 }
 
 .hero {
-  min-height: 58vh;
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+  background: #444444;
+  color: #ffffff;
   padding: 96px clamp(24px, 6vw, 72px) 72px;
+  position: relative;
+  overflow: visible;
+  perspective: 900px;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: clamp(28px, 7vw, 96px);
+  width: 100%;
+  min-height: calc(100svh - 168px);
+}
+
+.hero-copy {
+  align-self: flex-end;
+  min-width: 0;
 }
 
 .hero h1 {
@@ -36,8 +58,24 @@ body {
 
 .hero p {
   margin: 18px 0 0;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.68);
   font-size: 20px;
+}
+
+.suzanne-stage {
+  align-self: center;
+  flex: 0 0 clamp(225px, 33vw, 405px);
+  aspect-ratio: 1;
+  position: relative;
+  margin-right: clamp(18px, 5vw, 88px);
+  overflow: hidden;
+}
+
+.suzanne-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 30px 34px rgba(0, 0, 0, 0.42));
 }
 
 .portfolio {
@@ -288,6 +326,20 @@ body {
 }
 
 @media (max-width: 800px) {
+  .hero-content {
+    align-items: flex-start;
+    flex-direction: column-reverse;
+    min-height: calc(100svh - 168px);
+  }
+
+  .suzanne-stage {
+    align-self: center;
+    width: clamp(198px, 57vw, 285px);
+    flex-basis: auto;
+    margin-bottom: clamp(22px, 7vw, 40px);
+    margin-right: 0;
+  }
+
   .featured-work {
     grid-template-columns: 1fr;
     min-height: 82vh;
@@ -305,7 +357,8 @@ body {
 
 @media (max-width: 520px) {
   .hero {
-    min-height: 48vh;
+    min-height: 100vh;
+    min-height: 100svh;
   }
 
   .portfolio {
