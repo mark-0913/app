@@ -64,7 +64,7 @@ body {
 
 .suzanne-stage {
   align-self: center;
-  flex: 0 0 clamp(225px, 33vw, 405px);
+  flex: 0 0 clamp(260px, 38vw, 480px);
   aspect-ratio: 1;
   position: relative;
   margin-right: clamp(18px, 5vw, 88px);
@@ -75,7 +75,6 @@ body {
   display: block;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 30px 34px rgba(0, 0, 0, 0.42));
 }
 
 .portfolio {
