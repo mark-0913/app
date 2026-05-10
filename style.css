@@ -88,7 +88,7 @@ body {
 
 .suzanne-stage {
   align-self: center;
-  flex: 0 0 clamp(260px, 38vw, 480px);
+  flex: 0 0 clamp(260px, 38vw, 520px);
   aspect-ratio: 1;
   position: relative;
   margin-right: clamp(18px, 5vw, 88px);
@@ -163,7 +163,7 @@ body {
   display: none;
 }
 
-.featured-media-scroll video {
+.featured-media-item {
   flex: 0 0 100%;
   box-shadow: none;
   scroll-snap-align: center;

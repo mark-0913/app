@@ -69,6 +69,12 @@ const works = [
     imageRatio: "1 / 1",
     videoRatio: "1 / 1",
   },
+  {
+    title: "オープンリールデッキ",
+    description: "レトロな雰囲気",
+    image: "images/openreeldeck.png",
+    imageRatio: "1 / 1",
+  },
 
 ];
 /* 
@@ -76,6 +82,7 @@ const works = [
     title: "",
     description: "",
     image: "images/.png",
+    images: ["images/.png", "images/.png"],
     videos: ["videos/.mp4", "videos/.mp4"],
     imageRatio: "1 / 1",
     videoRatio: "1 / 1",
@@ -90,15 +97,15 @@ const thumbnailGrid = document.querySelector("#thumbnailGrid");
 let activeIndex = 0;
 
 function mediaElement(work) {
-  const videos = work.videos || (work.video ? [work.video] : []);
+  const mediaItems = mediaItemsFor(work);
 
-  if (videos.length > 1) {
+  if (mediaItems.length > 1) {
     const carousel = document.createElement("div");
     carousel.className = "featured-carousel";
 
     const scroller = document.createElement("div");
     scroller.className = "featured-media-scroll";
-    scroller.setAttribute("aria-label", `${work.title} videos`);
+    scroller.setAttribute("aria-label", `${work.title} media`);
 
     const indicators = document.createElement("div");
     indicators.className = "carousel-indicators";
@@ -106,32 +113,33 @@ function mediaElement(work) {
 
     let scrollTimer;
 
-    function scrollToVideo(index) {
-      const nextVideo = scroller.querySelectorAll("video")[index];
-      if (!nextVideo) return;
+    function scrollToMedia(index) {
+      const nextMedia = scroller.querySelectorAll(".featured-media-item")[index];
+      if (!nextMedia) return;
 
       scroller.scrollTo({
-        left: nextVideo.offsetLeft,
+        left: nextMedia.offsetLeft,
         behavior: "smooth",
       });
       updateIndicators(index);
     }
 
-    function visibleVideoIndex() {
-      const videoElements = [...scroller.querySelectorAll("video")];
+    function visibleMediaIndex() {
+      const mediaElements = [...scroller.querySelectorAll(".featured-media-item")];
       const scrollerCenter = scroller.scrollLeft + scroller.clientWidth / 2;
-      return videoElements.reduce((closest, video, index) => {
-        const videoCenter = video.offsetLeft + video.clientWidth / 2;
-        const distance = Math.abs(scrollerCenter - videoCenter);
+      return mediaElements.reduce((closest, media, index) => {
+        const mediaCenter = media.offsetLeft + media.clientWidth / 2;
+        const distance = Math.abs(scrollerCenter - mediaCenter);
         return distance < closest.distance ? { index, distance } : closest;
       }, { index: 0, distance: Infinity }).index;
     }
 
     function playVisibleVideo() {
       const videoElements = [...scroller.querySelectorAll("video")];
-      const activeIndex = visibleVideoIndex();
+      const mediaElements = [...scroller.querySelectorAll(".featured-media-item")];
+      const activeIndex = visibleMediaIndex();
       videoElements.forEach((video) => {
-        if (video === videoElements[activeIndex]) {
+        if (video === mediaElements[activeIndex]) {
           video.play().catch(() => {});
         } else {
           video.pause();
@@ -140,29 +148,29 @@ function mediaElement(work) {
       updateIndicators(activeIndex);
     }
 
-    videos.forEach((src, index) => {
-      const video = document.createElement("video");
-      video.src = src;
-      video.poster = work.image;
-      video.controls = true;
-      video.muted = true;
-      video.playsInline = true;
-      video.autoplay = index === 0;
-      video.setAttribute("aria-label", `${work.title} video ${index + 1}`);
-      video.addEventListener("ended", () => {
-        const nextIndex = (index + 1) % videos.length;
-        const nextVideo = scroller.querySelectorAll("video")[nextIndex];
-        nextVideo.currentTime = 0;
-        scrollToVideo(nextIndex);
-        nextVideo.play().catch(() => {});
-      });
-      scroller.append(video);
+    mediaItems.forEach((item, index) => {
+      const element = createMediaItem(work, item, index);
+      if (item.type === "video") {
+        element.autoplay = index === 0;
+        element.addEventListener("ended", () => {
+          const nextIndex = (index + 1) % mediaItems.length;
+          const nextMedia = scroller.querySelectorAll(".featured-media-item")[nextIndex];
+          if (nextMedia instanceof HTMLVideoElement) {
+            nextMedia.currentTime = 0;
+          }
+          scrollToMedia(nextIndex);
+          if (nextMedia instanceof HTMLVideoElement) {
+            nextMedia.play().catch(() => {});
+          }
+        });
+      }
+      scroller.append(element);
 
       const indicator = document.createElement("button");
       indicator.className = "carousel-indicator";
       indicator.type = "button";
-      indicator.setAttribute("aria-label", `動画 ${index + 1} を表示`);
-      indicator.addEventListener("click", () => scrollToVideo(index));
+      indicator.setAttribute("aria-label", `メディア ${index + 1} を表示`);
+      indicator.addEventListener("click", () => scrollToMedia(index));
       indicators.append(indicator);
     });
 
@@ -178,14 +186,14 @@ function mediaElement(work) {
       scrollTimer = setTimeout(playVisibleVideo, 140);
     }, { passive: true });
 
-    const previousButton = carouselButton("前の動画", "prev", () => {
-      const currentIndex = currentVideoIndex(scroller);
-      scrollToVideo((currentIndex - 1 + videos.length) % videos.length);
+    const previousButton = carouselButton("前のメディア", "prev", () => {
+      const currentIndex = currentMediaIndex(scroller);
+      scrollToMedia((currentIndex - 1 + mediaItems.length) % mediaItems.length);
     });
 
-    const nextButton = carouselButton("次の動画", "next", () => {
-      const currentIndex = currentVideoIndex(scroller);
-      scrollToVideo((currentIndex + 1) % videos.length);
+    const nextButton = carouselButton("次のメディア", "next", () => {
+      const currentIndex = currentMediaIndex(scroller);
+      scrollToMedia((currentIndex + 1) % mediaItems.length);
     });
 
     updateIndicators(0);
@@ -193,21 +201,17 @@ function mediaElement(work) {
     return carousel;
   }
 
-  if (videos.length === 1) {
-    const video = document.createElement("video");
-    video.src = videos[0];
-    video.poster = work.image;
-    video.controls = true;
-    video.loop = true;
-    video.muted = true;
-    video.playsInline = true;
-    video.autoplay = true;
-    video.setAttribute("aria-label", `${work.title} video`);
-    return video;
+  if (mediaItems.length === 1) {
+    const element = createMediaItem(work, mediaItems[0], 0);
+    if (element instanceof HTMLVideoElement) {
+      element.loop = true;
+      element.autoplay = true;
+    }
+    return element;
   }
 
   const image = document.createElement("img");
-  image.src = work.image;
+  image.src = primaryImageFor(work);
   image.alt = work.title;
   return image;
 }
@@ -222,20 +226,63 @@ function carouselButton(label, direction, onClick) {
   return button;
 }
 
-function currentVideoIndex(scroller) {
-  const videos = [...scroller.querySelectorAll("video")];
+function mediaItemsFor(work) {
+  const images = work.images || (work.image ? [work.image] : []);
+  const videos = work.videos || (work.video ? [work.video] : []);
+  return [
+    ...images.map((src) => ({ type: "image", src })),
+    ...videos.map((src) => ({ type: "video", src })),
+  ];
+}
+
+function primaryImageFor(work) {
+  return work.image || work.images?.[0] || "";
+}
+
+function mediaLabel(imageCount, videoCount) {
+  if (imageCount > 1 && videoCount > 1) return `画像 ${imageCount}枚 + 動画 ${videoCount}本`;
+  if (imageCount > 1 && videoCount === 1) return `画像 ${imageCount}枚 + 動画`;
+  if (imageCount === 1 && videoCount > 1) return `画像 + 動画 ${videoCount}本`;
+  if (imageCount === 1 && videoCount === 1) return "画像 + 動画";
+  if (imageCount > 1) return `画像 ${imageCount}枚`;
+  return "画像";
+}
+
+function createMediaItem(work, item, index) {
+  if (item.type === "video") {
+    const video = document.createElement("video");
+    video.src = item.src;
+    video.poster = primaryImageFor(work);
+    video.controls = true;
+    video.muted = true;
+    video.playsInline = true;
+    video.className = "featured-media-item";
+    video.setAttribute("aria-label", `${work.title} video ${index + 1}`);
+    return video;
+  }
+
+  const image = document.createElement("img");
+  image.src = item.src;
+  image.alt = work.title;
+  image.className = "featured-media-item";
+  return image;
+}
+
+function currentMediaIndex(scroller) {
+  const mediaElements = [...scroller.querySelectorAll(".featured-media-item")];
   const scrollerCenter = scroller.scrollLeft + scroller.clientWidth / 2;
-  return videos.reduce((closest, video, index) => {
-    const videoCenter = video.offsetLeft + video.clientWidth / 2;
-    const distance = Math.abs(scrollerCenter - videoCenter);
+  return mediaElements.reduce((closest, media, index) => {
+    const mediaCenter = media.offsetLeft + media.clientWidth / 2;
+    const distance = Math.abs(scrollerCenter - mediaCenter);
     return distance < closest.distance ? { index, distance } : closest;
   }, { index: 0, distance: Infinity }).index;
 }
 
 function renderFeatured(index) {
   const work = works[index];
-  const videos = work.videos || (work.video ? [work.video] : []);
-  featuredMedia.style.setProperty("--featured-ratio", videos.length ? work.videoRatio || work.imageRatio : work.imageRatio);
+  const mediaItems = mediaItemsFor(work);
+  const ratio = mediaItems[0]?.type === "video" ? work.videoRatio || work.imageRatio : work.imageRatio || work.videoRatio;
+  featuredMedia.style.setProperty("--featured-ratio", ratio);
   featuredMedia.replaceChildren(mediaElement(work));
   featuredTitle.textContent = work.title;
   featuredDescription.textContent = work.description;
@@ -266,7 +313,7 @@ function renderThumbnails() {
     visual.className = "thumbnail-visual";
 
     const image = document.createElement("img");
-    image.src = work.image;
+    image.src = primaryImageFor(work);
     image.alt = "";
     image.loading = "lazy";
 
@@ -276,8 +323,9 @@ function renderThumbnails() {
 
     const meta = document.createElement("span");
     meta.className = "thumbnail-meta";
+    const imageCount = work.images?.length || (work.image ? 1 : 0);
     const videoCount = work.videos?.length || (work.video ? 1 : 0);
-    meta.textContent = videoCount > 1 ? `画像 + 動画 ${videoCount}本` : videoCount === 1 ? "画像 + 動画" : "画像";
+    meta.textContent = mediaLabel(imageCount, videoCount);
 
     const text = document.createElement("span");
     text.className = "thumbnail-text";
