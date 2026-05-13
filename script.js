@@ -75,6 +75,17 @@ const works = [
     image: "images/openreeldeck.png",
     imageRatio: "1 / 1",
   },
+  {
+    title: "ホットコーヒー",
+    description: "ステンレスマグカップの質感と湯気が立ち上る様子",
+    image: "images/hotcoffee2.png",
+    videos: ["videos/coffee.mp4","videos/hotcoffee.mp4"],
+    imageRatio: "1 / 1",
+    videoRatio: "1 / 1",
+    sources: [
+    { label: "使用したHDRIs", url: "https://polyhaven.com/a/klippad_dawn_2" },
+    ],
+  },
 
 ];
 /* 
@@ -86,11 +97,16 @@ const works = [
     videos: ["videos/.mp4", "videos/.mp4"],
     imageRatio: "1 / 1",
     videoRatio: "1 / 1",
+    sources: [
+      // { label: "Texture source name", url: "https://example.com" },
+    ],
   },
 */
 const featuredMedia = document.querySelector("#featuredMedia");
 const featuredTitle = document.querySelector("#featuredTitle");
 const featuredDescription = document.querySelector("#featuredDescription");
+const featuredSources = document.querySelector("#featuredSources");
+const featuredCopy = document.querySelector(".featured-copy");
 const workCount = document.querySelector("#workCount");
 const thumbnailGrid = document.querySelector("#thumbnailGrid");
 
@@ -278,6 +294,60 @@ function currentMediaIndex(scroller) {
   }, { index: 0, distance: Infinity }).index;
 }
 
+function sourceLinksFor(work) {
+  return (work.sources || [])
+    .map((source) => {
+      if (typeof source === "string") {
+        return { label: "使用したtexture/HDRIs", url: source };
+      }
+
+      return {
+        label: source.label || "使用したtexture/HDRIs",
+        url: source.url,
+      };
+    })
+    .filter((source) => source.url);
+}
+
+function renderSourceLinks(work) {
+  const sources = sourceLinksFor(work);
+
+  if (sources.length === 0) {
+    featuredSources.hidden = true;
+    featuredSources.replaceChildren();
+    return;
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  sources.forEach((source) => {
+    const link = document.createElement("a");
+    link.className = "source-link";
+    link.href = source.url;
+    link.target = "_blank";
+    link.rel = "noopener noreferrer";
+    link.textContent = source.label;
+    fragment.append(link);
+  });
+
+  featuredSources.hidden = false;
+  featuredSources.replaceChildren(fragment);
+}
+
+function syncFeaturedCopyHeight() {
+  if (window.matchMedia("(max-width: 800px)").matches) {
+    featuredCopy.style.removeProperty("--featured-copy-height");
+    return;
+  }
+
+  const visibleMedia = featuredMedia.querySelector(".featured-media-scroll, img, video");
+  const mediaHeight = visibleMedia?.getBoundingClientRect().height;
+
+  if (mediaHeight) {
+    featuredCopy.style.setProperty("--featured-copy-height", `${Math.round(mediaHeight)}px`);
+  }
+}
+
 function renderFeatured(index) {
   const work = works[index];
   const mediaItems = mediaItemsFor(work);
@@ -286,10 +356,12 @@ function renderFeatured(index) {
   featuredMedia.replaceChildren(mediaElement(work));
   featuredTitle.textContent = work.title;
   featuredDescription.textContent = work.description;
+  renderSourceLinks(work);
   workCount.textContent = `${String(index + 1).padStart(2, "0")} / ${String(works.length).padStart(2, "0")}`;
   featuredMedia.style.setProperty("--zoom-scale", "0.78");
   updateActiveThumbnail();
   updateScrollZoom();
+  requestAnimationFrame(syncFeaturedCopyHeight);
 }
 
 function renderThumbnails() {
@@ -361,4 +433,7 @@ renderThumbnails();
 renderFeatured(activeIndex);
 
 window.addEventListener("scroll", updateScrollZoom, { passive: true });
-window.addEventListener("resize", updateScrollZoom);
+window.addEventListener("resize", () => {
+  updateScrollZoom();
+  syncFeaturedCopyHeight();
+});
