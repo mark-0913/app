@@ -78,12 +78,12 @@ const works = [
   {
     title: "ホットコーヒー",
     description: "ステンレスマグカップの質感と湯気が立ち上る様子",
-    image: "images/hotcoffee2.png",
+    image: "images/coffee1.png",
     videos: ["videos/coffee.mp4","videos/hotcoffee.mp4"],
     imageRatio: "1 / 1",
     videoRatio: "1 / 1",
     sources: [
-    { label: "使用したHDRIs", url: "https://polyhaven.com/a/klippad_dawn_2" },
+    { label: "使用したHDRIs", url: "https://polyhaven.com/a/cedar_bridge_sunset_1" },
     ],
   },
 
@@ -168,17 +168,7 @@ function mediaElement(work) {
       const element = createMediaItem(work, item, index);
       if (item.type === "video") {
         element.autoplay = index === 0;
-        element.addEventListener("ended", () => {
-          const nextIndex = (index + 1) % mediaItems.length;
-          const nextMedia = scroller.querySelectorAll(".featured-media-item")[nextIndex];
-          if (nextMedia instanceof HTMLVideoElement) {
-            nextMedia.currentTime = 0;
-          }
-          scrollToMedia(nextIndex);
-          if (nextMedia instanceof HTMLVideoElement) {
-            nextMedia.play().catch(() => {});
-          }
-        });
+        element.loop = true;
       }
       scroller.append(element);
 
