@@ -109,8 +109,12 @@ const featuredSources = document.querySelector("#featuredSources");
 const featuredCopy = document.querySelector(".featured-copy");
 const workCount = document.querySelector("#workCount");
 const thumbnailGrid = document.querySelector("#thumbnailGrid");
+const sortToggle = document.querySelector("#sortToggle");
+const sortLabel = document.querySelector("#sortLabel");
+const sortMark = document.querySelector("#sortMark");
 
 let activeIndex = 0;
+let sortOrder = "oldest";
 
 function mediaElement(work) {
   const mediaItems = mediaItemsFor(work);
@@ -347,20 +351,44 @@ function renderFeatured(index) {
   featuredTitle.textContent = work.title;
   featuredDescription.textContent = work.description;
   renderSourceLinks(work);
-  workCount.textContent = `${String(index + 1).padStart(2, "0")} / ${String(works.length).padStart(2, "0")}`;
+  updateWorkCount();
   featuredMedia.style.setProperty("--zoom-scale", "0.78");
   updateActiveThumbnail();
   updateScrollZoom();
   requestAnimationFrame(syncFeaturedCopyHeight);
 }
 
+function sortedWorks() {
+  const orderedWorks = works.map((work, index) => ({ work, index }));
+  return sortOrder === "newest" ? orderedWorks.reverse() : orderedWorks;
+}
+
+function activeDisplayIndex() {
+  return sortedWorks().findIndex(({ index }) => index === activeIndex);
+}
+
+function updateWorkCount() {
+  const displayIndex = activeDisplayIndex();
+  const safeIndex = displayIndex >= 0 ? displayIndex : activeIndex;
+  workCount.textContent = `${String(safeIndex + 1).padStart(2, "0")} / ${String(works.length).padStart(2, "0")}`;
+}
+
+function updateSortControl() {
+  const isNewest = sortOrder === "newest";
+  sortLabel.textContent = isNewest ? "新しい順" : "古い順";
+  sortMark.textContent = isNewest ? "↑" : "↓";
+  sortToggle.setAttribute("aria-label", `並び順を${isNewest ? "古い順" : "新しい順"}にする`);
+  sortToggle.setAttribute("aria-pressed", isNewest ? "true" : "false");
+}
+
 function renderThumbnails() {
   const fragment = document.createDocumentFragment();
 
-  works.forEach((work, index) => {
+  sortedWorks().forEach(({ work, index }) => {
     const button = document.createElement("button");
     button.className = "thumbnail";
     button.type = "button";
+    button.dataset.workIndex = String(index);
     button.setAttribute("aria-label", `${work.title} を表示`);
     button.addEventListener("click", () => {
       activeIndex = index;
@@ -402,8 +430,8 @@ function renderThumbnails() {
 }
 
 function updateActiveThumbnail() {
-  document.querySelectorAll(".thumbnail").forEach((thumbnail, index) => {
-    const isActive = index === activeIndex;
+  document.querySelectorAll(".thumbnail").forEach((thumbnail) => {
+    const isActive = Number(thumbnail.dataset.workIndex) === activeIndex;
     thumbnail.classList.toggle("is-active", isActive);
     thumbnail.setAttribute("aria-current", isActive ? "true" : "false");
   });
@@ -419,6 +447,15 @@ function updateScrollZoom() {
   featuredMedia.style.setProperty("--zoom-scale", scale.toFixed(3));
 }
 
+sortToggle.addEventListener("click", () => {
+  sortOrder = sortOrder === "oldest" ? "newest" : "oldest";
+  renderThumbnails();
+  updateSortControl();
+  updateActiveThumbnail();
+  updateWorkCount();
+});
+
+updateSortControl();
 renderThumbnails();
 renderFeatured(activeIndex);
 

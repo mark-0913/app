@@ -346,6 +346,44 @@ body {
   padding-top: 28px;
 }
 
+.thumbnail-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 22px;
+}
+
+.sort-toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0;
+  transition: border-color 180ms ease, background 180ms ease, color 180ms ease;
+}
+
+.sort-toggle:hover,
+.sort-toggle:focus-visible {
+  border-color: var(--accent);
+  background: rgba(37, 109, 133, 0.08);
+  color: var(--accent);
+}
+
+.sort-mark {
+  min-width: 1em;
+  font-size: 17px;
+  line-height: 1;
+  text-align: center;
+}
+
 .thumbnail-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
