@@ -18,13 +18,46 @@ body {
   color: var(--text);
 }
 
+.custom-cursor {
+  position: fixed;
+  left: var(--cursor-x, -120px);
+  top: var(--cursor-y, -120px);
+  z-index: 9999;
+  width: 60px;
+  height: 60px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(1);
+  transition: opacity 120ms ease, transform 120ms ease;
+  will-change: transform, opacity;
+}
+
+.has-custom-cursor,
+.has-custom-cursor * {
+  cursor: none !important;
+}
+
+.custom-cursor.is-visible {
+  opacity: 1;
+}
+
+.custom-cursor.is-clicking {
+  transform: translate(-50%, -50%) scale(0.92);
+}
+
+@media (pointer: coarse) {
+  .custom-cursor {
+    display: none;
+  }
+}
+
 .hero {
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background: #444444;
+  background: #000000;
   color: #ffffff;
   padding: 96px clamp(24px, 6vw, 72px) 72px;
   position: relative;

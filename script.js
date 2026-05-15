@@ -1,7 +1,7 @@
 const works = [
   {
     title: "本",
-    description: "シェーディングの練習として、合成皮革カバーの質感とページ側面の重なりを意識しました。",
+    description: "シェーディングの練習として、合成皮革カバーの質感とページ側面の重なりを意識。",
     image: "images/book1984_2.png",
     video: "videos/book1984.mp4",
     imageRatio: "16 / 9",
@@ -15,7 +15,7 @@ const works = [
   },
   {
     title: "スノードーム",
-    description: "雪の表現とガラス越しの見え方を工夫しました。",
+    description: "雪の表現とガラス越しの見え方を工夫。",
     image: "images/snowglobe.png",
     video: "videos/snowglobe.mp4",
     imageRatio: "1 / 1",
@@ -23,7 +23,7 @@ const works = [
   },
   {
     title: "本棚",
-    description: "以前作った本を使って制作しました。アニメーションにも挑戦し、自然な回転や細かな揺れが今後の課題。",
+    description: "以前作った本を使って制作。アニメーションに挑戦し、自然な回転や細かな揺れが今後の課題。",
     image: "images/hondana.png",
     video: "videos/hondana.mp4",
     imageRatio: "16 / 9",
@@ -71,7 +71,7 @@ const works = [
   },
   {
     title: "オープンリールデッキ",
-    description: "レトロな雰囲気",
+    description: "ローポリでレトロな雰囲気",
     image: "images/openreeldeck.png",
     imageRatio: "1 / 1",
   },

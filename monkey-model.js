@@ -2,6 +2,7 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const canvas = document.querySelector("#suzanneCanvas");
+const sheepModelColor = "#ffffff";
 
 if (canvas) {
   const scene = new THREE.Scene();
@@ -16,6 +17,7 @@ if (canvas) {
   const pointer = { x: 0, y: 0 };
   const rotation = { x: 0, y: 0 };
   let animationFrame = 0;
+  let sheepModel = null;
 
   camera.position.set(0, 0.08, 5.8);
   scene.add(modelRoot);
@@ -51,6 +53,23 @@ if (canvas) {
     modelRoot.scale.setScalar(2.45 / maxSize);
   }
 
+  function applyModelColor(model, colorValue) {
+    if (!model) return;
+
+    const color = new THREE.Color(colorValue);
+    model.traverse((child) => {
+      if (!child.isMesh) return;
+
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      materials.forEach((material) => {
+        if (material.color) {
+          material.color.copy(color);
+        }
+        material.needsUpdate = true;
+      });
+    });
+  }
+
   function updatePointer(clientX, clientY) {
     const rect = canvas.getBoundingClientRect();
     const centerX = rect.left + rect.width / 2;
@@ -68,9 +87,10 @@ if (canvas) {
   new GLTFLoader().load(
     "models/sheep.glb",
     (gltf) => {
-      const model = gltf.scene;
-      frameModel(model);
-      modelRoot.add(model);
+      sheepModel = gltf.scene;
+      frameModel(sheepModel);
+      applyModelColor(sheepModel, sheepModelColor);
+      modelRoot.add(sheepModel);
     },
     undefined,
     (error) => {
