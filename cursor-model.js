@@ -2,7 +2,17 @@ import * as THREE from "three";
 import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 
 const canvas = document.querySelector("#customCursor");
-const cursorModelColor = "#ffffff";
+const cursorModelColors = {
+  default: {
+    "ICO球": null,
+    "球": null,
+  },
+  click: {
+    "ICO球": null,
+    "ICO球.001": null,
+    "ICO球.002": null,
+  },
+};
 
 if (canvas && window.matchMedia("(pointer: fine)").matches) {
   const scene = new THREE.Scene();
@@ -25,7 +35,7 @@ if (canvas && window.matchMedia("(pointer: fine)").matches) {
   let previousX = 0;
   let previousY = 0;
   let hasPreviousPointer = false;
-  const modelOpacity = 0.8;
+  let modelOpacity = 0.55;
 
   camera.position.set(0, 0, 5);
   scene.add(modelRoot);
@@ -59,13 +69,12 @@ if (canvas && window.matchMedia("(pointer: fine)").matches) {
     model.scale.setScalar(2.45 / maxSize);
   }
 
-  function makeModelTransparent(model) {
-    applyModelColor(model, cursorModelColor);
-
+  function prepareModelMaterials(model) {
     model.traverse((child) => {
       if (!child.isMesh) return;
 
-      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      child.material = cloneMaterial(child.material);
+      const materials = materialsFor(child);
       materials.forEach((material) => {
         material.transparent = true;
         material.opacity = modelOpacity;
@@ -75,6 +84,18 @@ if (canvas && window.matchMedia("(pointer: fine)").matches) {
     });
   }
 
+  function cloneMaterial(material) {
+    if (Array.isArray(material)) {
+      return material.map((item) => item?.clone?.() || item);
+    }
+
+    return material?.clone?.() || material;
+  }
+
+  function materialsFor(mesh) {
+    return Array.isArray(mesh.material) ? mesh.material : [mesh.material].filter(Boolean);
+  }
+
   function applyModelColor(model, colorValue) {
     if (!model) return;
 
@@ -82,12 +103,52 @@ if (canvas && window.matchMedia("(pointer: fine)").matches) {
     model.traverse((child) => {
       if (!child.isMesh) return;
 
-      const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach((material) => {
-        if (material.color) {
-          material.color.copy(color);
-        }
-        material.needsUpdate = true;
+      applyMeshColor(child, color);
+    });
+  }
+
+  function applyMeshColor(mesh, colorValue) {
+    const color = colorValue instanceof THREE.Color ? colorValue : new THREE.Color(colorValue);
+    materialsFor(mesh).forEach((material) => {
+      if (material.color) {
+        material.color.copy(color);
+      }
+      material.needsUpdate = true;
+    });
+  }
+
+  function applyModelColorMap(model, colorMap = {}) {
+    if (!model) return;
+
+    model.traverse((child) => {
+      if (!child.isMesh) return;
+
+      const colorValue = colorMap[child.name];
+      if (colorValue) {
+        applyMeshColor(child, colorValue);
+      }
+    });
+  }
+
+  function setModelColors(name, colorMap = {}) {
+    const model = models.get(name);
+    cursorModelColors[name] = {
+      ...(cursorModelColors[name] || {}),
+      ...colorMap,
+    };
+    applyModelColorMap(model, cursorModelColors[name]);
+  }
+
+  function setModelOpacity(opacity) {
+    modelOpacity = THREE.MathUtils.clamp(opacity, 0, 1);
+    models.forEach((model) => {
+      model.traverse((child) => {
+        if (!child.isMesh) return;
+
+        materialsFor(child).forEach((material) => {
+          material.opacity = modelOpacity;
+          material.needsUpdate = true;
+        });
       });
     });
   }
@@ -111,8 +172,9 @@ if (canvas && window.matchMedia("(pointer: fine)").matches) {
         (gltf) => {
           const model = gltf.scene;
           frameModel(model);
-          makeModelTransparent(model);
+          prepareModelMaterials(model);
           models.set(name, model);
+          applyModelColorMap(model, cursorModelColors[name]);
           resolve(model);
         },
         undefined,
@@ -158,6 +220,13 @@ if (canvas && window.matchMedia("(pointer: fine)").matches) {
     loadModel("default", "models/wata.glb"),
     loadModel("click", "models/wata1.glb"),
   ]).then(() => {
+    window.setCursorModelColors = (nextColors = {}) => {
+      Object.entries(nextColors).forEach(([name, colorMap]) => {
+        setModelColors(name, colorMap);
+      });
+    };
+    window.setCursorModelOpacity = setModelOpacity;
+
     resizeRenderer();
     showModel("default");
     document.documentElement.classList.add("has-custom-cursor");
