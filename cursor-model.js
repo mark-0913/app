@@ -35,7 +35,7 @@ if (canvas && window.matchMedia("(pointer: fine)").matches) {
   let previousX = 0;
   let previousY = 0;
   let hasPreviousPointer = false;
-  let modelOpacity = 0.55;
+  let modelOpacity = 0.55;//透明度
 
   camera.position.set(0, 0, 5);
   scene.add(modelRoot);
@@ -201,7 +201,7 @@ if (canvas && window.matchMedia("(pointer: fine)").matches) {
   }
 
   function animate() {
-    const targetY = pointer.x * 1.9 + pointer.velocityX * 0.58;
+    const targetY = pointer.x * 2.2 + pointer.velocityX * 0.58;
     const targetX = -pointer.y * 1.35 - pointer.velocityY * 0.42;
     const targetZ = pointer.velocityX * -0.34 + (isClicking ? -0.24 : 0);
 

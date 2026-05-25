@@ -86,6 +86,16 @@ const works = [
     { label: "使用したHDRIs", url: "https://polyhaven.com/a/cedar_bridge_sunset_1" },
     ],
   },
+  {
+    title: "宝石",
+    description: "　",
+    image: "images/jewel1.png",
+    images: ["images/jewel.png", "images/jewel1.png"],
+    imageRatio: "1 / 1",
+    sources: [
+       { label: "monochrome_studio_02_4k.exr", url: "https://polyhaven.com/a/monochrome_studio_02" },
+    ],
+  },
 
 ];
 /* 
