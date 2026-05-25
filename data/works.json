@@ -41,9 +41,9 @@
     "id": "syadanki",
     "title": "遮断機",
     "description": " ",
-    "image": "images/syadanki.png",
+    "images": ["images/syadanki1.png","images/syadanki.png"],
     "videos": ["videos/syadanki-omote.mp4", "videos/syadanki-ura.mp4"],
-    "imageRatio": "16 / 9",
+    "imageRatio": "1 / 1",
     "videoRatio": "1 / 1",
     "tags": ["animation"]
   },
@@ -114,14 +114,14 @@
   {
     "id": "jewel",
     "title": "宝石",
-    "description": "　",
+    "description": "金属、宝石特有の質感を表現",
     "image": "images/jewel1.png",
     "images": ["images/jewel.png", "images/jewel1.png"],
     "imageRatio": "1 / 1",
-    "tags": ["glass", "lighting"],
+    "tags": ["metal","glass", "lighting"],
     "sources": [
       {
-        "label": "monochrome_studio_02_4k.exr",
+        "label": "使用したHDRIs",
         "url": "https://polyhaven.com/a/monochrome_studio_02"
       }
     ]
