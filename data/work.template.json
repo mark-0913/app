@@ -1,0 +1,18 @@
+{
+  "id": "new-work-id",
+  "title": "作品名",
+  "description": "作品の説明",
+  "image": "images/example.png",
+  "images": ["images/example-1.png", "images/example-2.png"],
+  "video": "videos/example.mp4",
+  "videos": ["videos/example-1.mp4", "videos/example-2.mp4"],
+  "imageRatio": "1 / 1",
+  "videoRatio": "1 / 1",
+  "tags": ["shader", "practice"],
+  "sources": [
+    {
+      "label": "Texture or HDRI source",
+      "url": "https://example.com"
+    }
+  ]
+}

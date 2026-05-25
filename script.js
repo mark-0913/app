@@ -1,117 +1,5 @@
-const works = [
-  {
-    title: "本",
-    description: "シェーディングの練習として、合成皮革カバーの質感とページ側面の重なりを意識。",
-    image: "images/book1984_2.png",
-    video: "videos/book1984.mp4",
-    imageRatio: "16 / 9",
-    videoRatio: "16 / 9",
-  },
-  {
-    title: "ロッカー",
-    description: "金属の質感を重視した作品です。",
-    image: "images/rokka.png",
-    imageRatio: "1 / 1",
-  },
-  {
-    title: "スノードーム",
-    description: "雪の表現とガラス越しの見え方を工夫。",
-    image: "images/snowglobe.png",
-    video: "videos/snowglobe.mp4",
-    imageRatio: "1 / 1",
-    videoRatio: "1 / 1",
-  },
-  {
-    title: "本棚",
-    description: "以前作った本を使って制作。アニメーションに挑戦し、自然な回転や細かな揺れが今後の課題。",
-    image: "images/hondana.png",
-    video: "videos/hondana.mp4",
-    imageRatio: "16 / 9",
-    videoRatio: "16 / 9",
-  },
-  {
-    title: "遮断機",
-    description: " ",
-    image: "images/syadanki.png",
-    videos: ["videos/syadanki-omote.mp4", "videos/syadanki-ura.mp4"],
-    imageRatio: "16 / 9",
-    videoRatio: "1 / 1",
-  },
-  {
-    title: "シャンデリア",
-    description: "エミッションを使用して照明を作成。",
-    image: "images/syoumei.png",
-    videos: ["videos/syoumei1.mp4", "videos/syoumei.mp4"],
-    imageRatio: "1 / 1",
-    videoRatio: "1 / 1",
-  }, 
-  {
-    title: "ポスト",
-    description: "シェーダーの練習",
-    image: "images/post.png",
-    videos: ["videos/post.mp4","videos/post1.mp4"],
-    imageRatio: "1 / 1",
-    videoRatio: "1 / 1",
-  },
-  {
-    title: "知恵の輪",
-    description: "金属の粉吹きや錆の質感を意識して制作",
-    image: "images/tienowa.png",
-    video: "videos/tienowa.mp4",
-    imageRatio: "16 / 9",
-    videoRatio: "16 / 9",
-  },
-  {
-    title: "目薬",
-    description: "透明なプラスチックと液体のシェーディング練習",
-    image: "images/megusuri.png",
-    video: "videos/megusuri.mp4",
-    imageRatio: "1 / 1",
-    videoRatio: "1 / 1",
-  },
-  {
-    title: "オープンリールデッキ",
-    description: "ローポリでレトロな雰囲気",
-    image: "images/openreeldeck.png",
-    imageRatio: "1 / 1",
-  },
-  {
-    title: "ホットコーヒー",
-    description: "ステンレスマグカップの質感と湯気が立ち上る様子",
-    image: "images/coffee1.png",
-    videos: ["videos/coffee.mp4","videos/hotcoffee.mp4"],
-    imageRatio: "1 / 1",
-    videoRatio: "1 / 1",
-    sources: [
-    { label: "使用したHDRIs", url: "https://polyhaven.com/a/cedar_bridge_sunset_1" },
-    ],
-  },
-  {
-    title: "宝石",
-    description: "　",
-    image: "images/jewel1.png",
-    images: ["images/jewel.png", "images/jewel1.png"],
-    imageRatio: "1 / 1",
-    sources: [
-       { label: "monochrome_studio_02_4k.exr", url: "https://polyhaven.com/a/monochrome_studio_02" },
-    ],
-  },
-
-];
-/* 
- {
-    title: "",
-    description: "",
-    image: "images/.png",
-    images: ["images/.png", "images/.png"],
-    videos: ["videos/.mp4", "videos/.mp4"],
-    imageRatio: "1 / 1",
-    videoRatio: "1 / 1",
-    sources: [
-      // { label: "Texture source name", url: "https://example.com" },
-    ],
-  },
-*/
+let works = [];
+const worksDataPath = "data/works.json";
 const featuredMedia = document.querySelector("#featuredMedia");
 const featuredTitle = document.querySelector("#featuredTitle");
 const featuredDescription = document.querySelector("#featuredDescription");
@@ -125,6 +13,27 @@ const sortMark = document.querySelector("#sortMark");
 
 let activeIndex = 0;
 let sortOrder = "oldest";
+
+async function loadWorks() {
+  const response = await fetch(worksDataPath);
+  if (!response.ok) {
+    throw new Error(`${worksDataPath} could not be loaded: ${response.status}`);
+  }
+
+  const data = await response.json();
+  if (!Array.isArray(data)) {
+    throw new Error(`${worksDataPath} must contain an array.`);
+  }
+
+  works = data;
+}
+
+function showLoadError(error) {
+  console.error(error);
+  featuredTitle.textContent = "作品データを読み込めませんでした";
+  featuredDescription.textContent = "ローカルサーバーで開いているか、data/works.json の形式を確認してください。";
+  workCount.textContent = "00 / 00";
+}
 
 function mediaElement(work) {
   const mediaItems = mediaItemsFor(work);
@@ -465,9 +374,18 @@ sortToggle.addEventListener("click", () => {
   updateWorkCount();
 });
 
-updateSortControl();
-renderThumbnails();
-renderFeatured(activeIndex);
+async function init() {
+  try {
+    await loadWorks();
+    updateSortControl();
+    renderThumbnails();
+    renderFeatured(activeIndex);
+  } catch (error) {
+    showLoadError(error);
+  }
+}
+
+init();
 
 window.addEventListener("scroll", updateScrollZoom, { passive: true });
 window.addEventListener("resize", () => {

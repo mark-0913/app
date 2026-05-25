@@ -56,18 +56,26 @@ http://localhost:8000
 
 ## 作品データの追加方法
 
-作品は `script.js` の `works` 配列で管理しています。  
-新しい作品を追加する場合は、画像や動画を `images/`・`videos/` に配置してから、以下のような形式でデータを追加します。
+作品は `data/works.json` で管理しています。  
+新しい作品を追加する場合は、画像や動画を `images/`・`videos/` に配置してから、`data/work.template.json` を参考にデータを追加します。
 
-```js
+```json
 {
-  title: "作品名",
-  description: "作品の説明",
-  image: "images/example.png",
-  video: "videos/example.mp4",
-  imageRatio: "1 / 1",
-  videoRatio: "1 / 1",
+  "id": "example",
+  "title": "作品名",
+  "description": "作品の説明",
+  "image": "images/example.png",
+  "video": "videos/example.mp4",
+  "imageRatio": "1 / 1",
+  "videoRatio": "1 / 1",
+  "tags": ["shader", "practice"]
 }
+```
+
+作品データを書き換えたあとは、以下のコマンドで画像・動画のファイル名ミスを確認できます。
+
+```bash
+node tools/check-assets.mjs
 ```
 
 ## 補足
