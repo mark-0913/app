@@ -50,6 +50,64 @@
           <span id="sortLabel">古い順</span>
           <span class="sort-mark" id="sortMark" aria-hidden="true">↓</span>
         </button>
+        <details class="tag-search" id="tagSearch">
+          <summary id="tagSummary">タグ: すべて</summary>
+          <div class="tag-panel" aria-label="タグで作品を絞り込む">
+            <button class="tag-clear" id="tagClear" type="button">すべて</button>
+            <fieldset>
+              <legend>人工物</legend>
+              <label><input type="checkbox" name="tagFilter" value="Vehicle">Vehicle（乗り物）</label>
+              <label><input type="checkbox" name="tagFilter" value="Weapon">Weapon（武器）</label>
+              <label><input type="checkbox" name="tagFilter" value="Product Design">Product Design（製品）</label>
+              <label><input type="checkbox" name="tagFilter" value="Architecture">Architecture（建築）</label>
+            </fieldset>
+            <fieldset>
+              <legend>有機物</legend>
+              <label><input type="checkbox" name="tagFilter" value="Character">Character（キャラクター）</label>
+              <label><input type="checkbox" name="tagFilter" value="Creature">Creature（生物）</label>
+              <label><input type="checkbox" name="tagFilter" value="Animal">Animal（動物）</label>
+              <label><input type="checkbox" name="tagFilter" value="Human">Human（人物）</label>
+            </fieldset>
+            <fieldset>
+              <legend>環境</legend>
+              <label><input type="checkbox" name="tagFilter" value="Cityscape">Cityscape（都市景観）</label>
+              <label><input type="checkbox" name="tagFilter" value="Interior">Interior（室内）</label>
+              <label><input type="checkbox" name="tagFilter" value="Exterior">Exterior（屋外）</label>
+            </fieldset>
+            <fieldset>
+              <legend>小物</legend>
+              <label><input type="checkbox" name="tagFilter" value="Furniture">Furniture（家具）</label>
+              <label><input type="checkbox" name="tagFilter" value="Tools">Tools（道具）</label>
+              <label><input type="checkbox" name="tagFilter" value="Food">Food（食べ物）</label>
+              <label><input type="checkbox" name="tagFilter" value="Daily Objects">Daily Objects（日用品）</label>
+            </fieldset>
+            <fieldset>
+              <legend>材質表現</legend>
+              <label><input type="checkbox" name="tagFilter" value="Metal">Metal</label>
+              <label><input type="checkbox" name="tagFilter" value="Glass">Glass</label>
+              <label><input type="checkbox" name="tagFilter" value="Wood">Wood</label>
+              <label><input type="checkbox" name="tagFilter" value="Stone">Stone</label>
+              <label><input type="checkbox" name="tagFilter" value="Fabric">Fabric</label>
+              <label><input type="checkbox" name="tagFilter" value="Liquid">Liquid</label>
+              <label><input type="checkbox" name="tagFilter" value="Plastic">Plastic</label>
+            </fieldset>
+            <fieldset>
+              <legend>VFX</legend>
+              <label><input type="checkbox" name="tagFilter" value="Explosion">Explosion</label>
+              <label><input type="checkbox" name="tagFilter" value="Smoke">Smoke</label>
+              <label><input type="checkbox" name="tagFilter" value="Fire">Fire</label>
+              <label><input type="checkbox" name="tagFilter" value="Water Simulation">Water Simulation</label>
+              <label><input type="checkbox" name="tagFilter" value="Geometry Nodes">Geometry Nodes</label>
+            </fieldset>
+            <fieldset>
+              <legend>Stylized</legend>
+              <label><input type="checkbox" name="tagFilter" value="Anime Style">Anime Style</label>
+              <label><input type="checkbox" name="tagFilter" value="Low Poly">Low Poly</label>
+              <label><input type="checkbox" name="tagFilter" value="Toon">Toon</label>
+              <label><input type="checkbox" name="tagFilter" value="Hand Painted">Hand Painted</label>
+            </fieldset>
+          </div>
+        </details>
       </div>
       <div class="thumbnail-grid" id="thumbnailGrid"></div>
     </section>

@@ -7,7 +7,10 @@
     "video": "videos/book1984.mp4",
     "imageRatio": "16 / 9",
     "videoRatio": "16 / 9",
-    "tags": ["book", "shader", "practice"]
+    "tags": [
+      "Daily Objects",
+      "Fabric"
+    ]
   },
   {
     "id": "rokka",
@@ -15,7 +18,10 @@
     "description": "金属の質感を重視した作品です。",
     "image": "images/rokka.png",
     "imageRatio": "1 / 1",
-    "tags": ["metal"]
+    "tags": [
+      "Interior",
+      "Metal"
+    ]
   },
   {
     "id": "snowglobe",
@@ -25,7 +31,10 @@
     "video": "videos/snowglobe.mp4",
     "imageRatio": "1 / 1",
     "videoRatio": "1 / 1",
-    "tags": ["glass", "animation"]
+    "tags": [
+      "Daily Objects",
+      "Glass"
+    ]
   },
   {
     "id": "hondana",
@@ -35,37 +44,66 @@
     "video": "videos/hondana.mp4",
     "imageRatio": "16 / 9",
     "videoRatio": "16 / 9",
-    "tags": ["book", "animation"]
+    "tags": [
+      "Furniture",
+      "Daily Objects",
+      "Wood"
+    ]
   },
   {
     "id": "syadanki",
     "title": "遮断機",
     "description": " ",
-    "images": ["images/syadanki1.png","images/syadanki.png"],
-    "videos": ["videos/syadanki-omote.mp4", "videos/syadanki-ura.mp4"],
+    "images": [
+      "images/syadanki1.png",
+      "images/syadanki.png"
+    ],
+    "videos": [
+      "videos/syadanki-omote.mp4",
+      "videos/syadanki-ura.mp4"
+    ],
     "imageRatio": "1 / 1",
     "videoRatio": "1 / 1",
-    "tags": ["animation"]
+    "tags": [
+      "Exterior",
+      "Metal",
+      "Low Poly"
+    ]
   },
   {
     "id": "syoumei",
     "title": "シャンデリア",
     "description": "エミッションを使用して照明を作成。",
     "image": "images/syoumei.png",
-    "videos": ["videos/syoumei1.mp4", "videos/syoumei.mp4"],
+    "videos": [
+      "videos/syoumei1.mp4",
+      "videos/syoumei.mp4"
+    ],
     "imageRatio": "1 / 1",
     "videoRatio": "1 / 1",
-    "tags": ["lighting", "emission"]
+    "tags": [
+      "Architecture",
+      "Wood",
+      "lighting"
+    ]
   },
   {
     "id": "post",
     "title": "ポスト",
     "description": "シェーダーの練習",
     "image": "images/post.png",
-    "videos": ["videos/post.mp4", "videos/post1.mp4"],
+    "videos": [
+      "videos/post.mp4",
+      "videos/post1.mp4"
+    ],
     "imageRatio": "1 / 1",
     "videoRatio": "1 / 1",
-    "tags": ["shader", "practice"]
+    "tags": [
+      "Exterior",
+      "Metal",
+      "Stone",
+      "Low Poly"
+    ]
   },
   {
     "id": "tienowa",
@@ -75,7 +113,9 @@
     "video": "videos/tienowa.mp4",
     "imageRatio": "16 / 9",
     "videoRatio": "16 / 9",
-    "tags": ["metal"]
+    "tags": [
+      "Metal"
+    ]
   },
   {
     "id": "megusuri",
@@ -85,7 +125,12 @@
     "video": "videos/megusuri.mp4",
     "imageRatio": "1 / 1",
     "videoRatio": "1 / 1",
-    "tags": ["plastic", "shader", "practice"]
+    "tags": [
+      "Product Design",
+      "Daily Objects",
+      "Liquid",
+      "Plastic"
+    ]
   },
   {
     "id": "openreeldeck",
@@ -93,17 +138,28 @@
     "description": "ローポリでレトロな雰囲気",
     "image": "images/openreeldeck.png",
     "imageRatio": "1 / 1",
-    "tags": ["low-poly"]
+    "tags": [
+      "Product Design",
+      "Wood",
+      "Low Poly"
+    ]
   },
   {
     "id": "hotcoffee",
     "title": "ホットコーヒー",
     "description": "ステンレスマグカップの質感と湯気が立ち上る様子",
     "image": "images/coffee1.png",
-    "videos": ["videos/coffee.mp4", "videos/hotcoffee.mp4"],
+    "videos": [
+      "videos/coffee.mp4",
+      "videos/hotcoffee.mp4"
+    ],
     "imageRatio": "1 / 1",
     "videoRatio": "1 / 1",
-    "tags": ["metal", "smoke", "animation"],
+    "tags": [
+      "Daily Objects",
+      "Metal",
+      "Smoke"
+    ],
     "sources": [
       {
         "label": "使用したHDRIs",
@@ -116,9 +172,16 @@
     "title": "宝石",
     "description": "金属、宝石特有の質感を表現",
     "image": "images/jewel1.png",
-    "images": ["images/jewel.png", "images/jewel1.png"],
+    "images": [
+      "images/jewel.png",
+      "images/jewel1.png"
+    ],
     "imageRatio": "1 / 1",
-    "tags": ["metal","glass", "lighting"],
+    "tags": [
+      "Tools",
+      "Metal",
+      "Glass"
+    ],
     "sources": [
       {
         "label": "使用したHDRIs",

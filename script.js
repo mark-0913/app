@@ -11,9 +11,13 @@ const thumbnailGrid = document.querySelector("#thumbnailGrid");
 const sortToggle = document.querySelector("#sortToggle");
 const sortLabel = document.querySelector("#sortLabel");
 const sortMark = document.querySelector("#sortMark");
+const tagSummary = document.querySelector("#tagSummary");
+const tagClear = document.querySelector("#tagClear");
+const tagCheckboxes = [...document.querySelectorAll('input[name="tagFilter"]')];
 
 let activeIndex = 0;
 let sortOrder = "oldest";
+let activeTags = [];
 
 async function loadWorks() {
   const response = await fetch(worksDataPath);
@@ -283,14 +287,34 @@ function sortedWorks() {
   return sortOrder === "newest" ? orderedWorks.reverse() : orderedWorks;
 }
 
+function normalizeTag(tag) {
+  return String(tag).toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+function workMatchesTag(work) {
+  if (activeTags.length === 0) return true;
+  const workTags = (work.tags || []).map(normalizeTag);
+  return activeTags.some((activeTag) => workTags.includes(normalizeTag(activeTag)));
+}
+
+function displayedWorks() {
+  return sortedWorks().filter(({ work }) => workMatchesTag(work));
+}
+
 function activeDisplayIndex() {
-  return sortedWorks().findIndex(({ index }) => index === activeIndex);
+  return displayedWorks().findIndex(({ index }) => index === activeIndex);
 }
 
 function updateWorkCount() {
+  const totalWorks = displayedWorks().length;
+  if (totalWorks === 0) {
+    workCount.textContent = "00 / 00";
+    return;
+  }
+
   const displayIndex = activeDisplayIndex();
   const safeIndex = displayIndex >= 0 ? displayIndex : activeIndex;
-  workCount.textContent = `${String(safeIndex + 1).padStart(2, "0")} / ${String(works.length).padStart(2, "0")}`;
+  workCount.textContent = `${String(safeIndex + 1).padStart(2, "0")} / ${String(totalWorks).padStart(2, "0")}`;
 }
 
 function updateSortControl() {
@@ -301,10 +325,37 @@ function updateSortControl() {
   sortToggle.setAttribute("aria-pressed", isNewest ? "true" : "false");
 }
 
+function updateTagSummary() {
+  if (activeTags.length === 0) {
+    tagSummary.textContent = "タグ: すべて";
+    return;
+  }
+
+  tagSummary.textContent = `タグ: ${activeTags.length}件選択中`;
+}
+
+function preserveScrollPosition(update) {
+  const scrollX = window.scrollX;
+  const scrollY = window.scrollY;
+  update();
+  requestAnimationFrame(() => {
+    window.scrollTo(scrollX, scrollY);
+  });
+}
+
 function renderThumbnails() {
   const fragment = document.createDocumentFragment();
+  const worksToRender = displayedWorks();
 
-  sortedWorks().forEach(({ work, index }) => {
+  if (worksToRender.length === 0) {
+    const emptyMessage = document.createElement("p");
+    emptyMessage.className = "thumbnail-empty";
+    emptyMessage.textContent = "このタグの作品はまだありません。";
+    thumbnailGrid.replaceChildren(emptyMessage);
+    return;
+  }
+
+  worksToRender.forEach(({ work, index }) => {
     const button = document.createElement("button");
     button.className = "thumbnail";
     button.type = "button";
@@ -349,6 +400,25 @@ function renderThumbnails() {
   thumbnailGrid.replaceChildren(fragment);
 }
 
+function syncActiveWorkWithFilter() {
+  const worksToRender = displayedWorks();
+  if (worksToRender.length === 0) {
+    updateWorkCount();
+    updateActiveThumbnail();
+    return;
+  }
+
+  const activeWorkIsVisible = worksToRender.some(({ index }) => index === activeIndex);
+  if (!activeWorkIsVisible) {
+    activeIndex = worksToRender[0].index;
+    renderFeatured(activeIndex);
+    return;
+  }
+
+  updateWorkCount();
+  updateActiveThumbnail();
+}
+
 function updateActiveThumbnail() {
   document.querySelectorAll(".thumbnail").forEach((thumbnail) => {
     const isActive = Number(thumbnail.dataset.workIndex) === activeIndex;
@@ -376,8 +446,32 @@ sortToggle.addEventListener("click", () => {
   sortOrder = sortOrder === "oldest" ? "newest" : "oldest";
   renderThumbnails();
   updateSortControl();
-  updateActiveThumbnail();
-  updateWorkCount();
+  syncActiveWorkWithFilter();
+});
+
+tagCheckboxes.forEach((checkbox) => {
+  checkbox.addEventListener("change", () => {
+    preserveScrollPosition(() => {
+      activeTags = tagCheckboxes
+        .filter((tagCheckbox) => tagCheckbox.checked)
+        .map((tagCheckbox) => tagCheckbox.value);
+      updateTagSummary();
+      renderThumbnails();
+      syncActiveWorkWithFilter();
+    });
+  });
+});
+
+tagClear.addEventListener("click", () => {
+  preserveScrollPosition(() => {
+    tagCheckboxes.forEach((checkbox) => {
+      checkbox.checked = false;
+    });
+    activeTags = [];
+    updateTagSummary();
+    renderThumbnails();
+    syncActiveWorkWithFilter();
+  });
 });
 
 async function init() {
@@ -385,6 +479,7 @@ async function init() {
     await loadWorks();
     setInitialWork();
     updateSortControl();
+    updateTagSummary();
     renderThumbnails();
     renderFeatured(activeIndex);
   } catch (error) {
