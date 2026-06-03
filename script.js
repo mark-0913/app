@@ -1,5 +1,6 @@
 let works = [];
 const worksDataPath = "data/works.json";
+const initialWorkId = "tienowa";
 const featuredMedia = document.querySelector("#featuredMedia");
 const featuredTitle = document.querySelector("#featuredTitle");
 const featuredDescription = document.querySelector("#featuredDescription");
@@ -366,6 +367,11 @@ function updateScrollZoom() {
   featuredMedia.style.setProperty("--zoom-scale", scale.toFixed(3));
 }
 
+function setInitialWork() {
+  const initialIndex = works.findIndex((work) => work.id === initialWorkId);
+  activeIndex = initialIndex >= 0 ? initialIndex : 0;
+}
+
 sortToggle.addEventListener("click", () => {
   sortOrder = sortOrder === "oldest" ? "newest" : "oldest";
   renderThumbnails();
@@ -377,6 +383,7 @@ sortToggle.addEventListener("click", () => {
 async function init() {
   try {
     await loadWorks();
+    setInitialWork();
     updateSortControl();
     renderThumbnails();
     renderFeatured(activeIndex);
