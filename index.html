@@ -53,11 +53,12 @@
         <details class="tag-search" id="tagSearch">
           <summary id="tagSummary">タグ: すべて</summary>
           <div class="tag-panel" aria-label="タグで作品を絞り込む">
-            <button class="tag-clear" id="tagClear" type="button">すべて</button>
+            <button class="tag-clear" id="tagClear" type="button" disabled>選択をリセット</button>
             <fieldset>
               <legend>人工物</legend>
               <label><input type="checkbox" name="tagFilter" value="Vehicle">Vehicle（乗り物）</label>
               <label><input type="checkbox" name="tagFilter" value="Weapon">Weapon（武器）</label>
+              <label><input type="checkbox" name="tagFilter" value="Machinery">Machinery（機械）</label>
               <label><input type="checkbox" name="tagFilter" value="Product Design">Product Design（製品）</label>
               <label><input type="checkbox" name="tagFilter" value="Architecture">Architecture（建築）</label>
             </fieldset>
@@ -70,7 +71,6 @@
             </fieldset>
             <fieldset>
               <legend>環境</legend>
-              <label><input type="checkbox" name="tagFilter" value="Cityscape">Cityscape（都市景観）</label>
               <label><input type="checkbox" name="tagFilter" value="Interior">Interior（室内）</label>
               <label><input type="checkbox" name="tagFilter" value="Exterior">Exterior（屋外）</label>
             </fieldset>

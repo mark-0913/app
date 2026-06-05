@@ -328,10 +328,12 @@ function updateSortControl() {
 function updateTagSummary() {
   if (activeTags.length === 0) {
     tagSummary.textContent = "タグ: すべて";
+    tagClear.disabled = true;
     return;
   }
 
   tagSummary.textContent = `タグ: ${activeTags.length}件選択中`;
+  tagClear.disabled = false;
 }
 
 function preserveScrollPosition(update) {

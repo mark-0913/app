@@ -12,6 +12,7 @@ const tagGroups = [
     tags: [
       ["Vehicle", "乗り物"],
       ["Weapon", "武器"],
+      ["Machinery", "機械"],
       ["Product Design", "製品"],
       ["Architecture", "建築"],
     ],
@@ -28,7 +29,6 @@ const tagGroups = [
   {
     name: "環境",
     tags: [
-      ["Cityscape", "都市景観"],
       ["Interior", "室内"],
       ["Exterior", "屋外"],
     ],
