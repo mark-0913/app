@@ -147,6 +147,7 @@ body {
   gap: clamp(28px, 5vw, 64px);
   min-height: 88vh;
   padding: 10vh 0 12vh;
+  overflow-anchor: none;
 }
 
 .featured-media {
@@ -344,6 +345,7 @@ body {
 .thumbnail-section {
   border-top: 1px solid var(--line);
   padding-top: 28px;
+  overflow-anchor: none;
 }
 
 .thumbnail-toolbar {
@@ -412,7 +414,7 @@ body {
 }
 
 .tag-search summary {
-  min-width: 168px;
+  width: 168px;
   justify-content: space-between;
   list-style: none;
 }
@@ -448,6 +450,7 @@ body {
   border-radius: 6px;
   background: #ffffff;
   box-shadow: 0 18px 44px rgba(0, 0, 0, 0.14);
+  overflow-anchor: none;
 }
 
 .tag-clear {

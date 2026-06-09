@@ -339,10 +339,19 @@ function updateTagSummary() {
 function preserveScrollPosition(update) {
   const scrollX = window.scrollX;
   const scrollY = window.scrollY;
-  update();
-  requestAnimationFrame(() => {
+  const restoreScroll = () => {
     window.scrollTo(scrollX, scrollY);
+  };
+
+  update();
+
+  restoreScroll();
+  requestAnimationFrame(() => {
+    restoreScroll();
+    requestAnimationFrame(restoreScroll);
   });
+  setTimeout(restoreScroll, 80);
+  setTimeout(restoreScroll, 180);
 }
 
 function renderThumbnails() {
